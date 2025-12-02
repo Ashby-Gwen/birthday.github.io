@@ -59,6 +59,16 @@
             align-items: center;
             gap: 28px;
             width: 100%;
+            padding: 40px;
+
+        }
+
+        /* Phone spacing */
+        @media (max-width: 600px) {
+            .stage {
+                padding: 20px;
+                padding-top: 40px;
+            }
         }
 
         /* State when the envelope is opened (Desktop/Large Screen) */
@@ -342,7 +352,7 @@
             }
 
             .card {
-                width: 95%;
+                width: 60%;
             }
 
             .photo-wrap {
@@ -350,6 +360,7 @@
                 /* Move photos above the letter on mobile */
                 margin-bottom: 20px;
                 width: 95%;
+                padding-top: 400px;
             }
 
             .collage {
@@ -365,7 +376,6 @@
     <button id="closeButton" class="close-button">
         ❌ Close
     </button>
-
     <div class="stage" id="stage">
         <!-- Envelope - Perfectly centered by the body flexbox -->
         <div class="envelope" id="envelope">📩 Click Me!</div>
@@ -377,9 +387,11 @@
                 <div id="balloonLayer" aria-hidden="true"></div>
                 <div id="letter" class="letter">
                     🎉 Happy Birthday Papa! 🎉<br><br>
-                    Wishing you a day filled with love, joy, and all the happiness in the world. Thank you for being an
+                    Wishing you a day filled with love, joy, and all the happiness in the world. Thank you for being
+                    an
                     amazing father and inspiration.<br><br>
-                    More birthdays to come pa. Continue to trust Jesus that through you po maguide nya ang Family natin. <br><br>
+                    More birthdays to come pa. Continue to trust Jesus that through you po maguide nya ang Family
+                    natin. <br><br>
                     Love, <br>
                     Mama<br>
                     Raprap<br>
