@@ -1,13 +1,23 @@
-// Function to start the background music (if using the <audio> tag)
-function startMusic() {
+// Function to handle the music playback and hide the overlay
+function startGame() {
     const music = document.getElementById('background-music');
+    const overlay = document.getElementById('start-overlay');
+    
+    // 1. Play Music
     if (music) {
-        // Attempt to play music. Browsers often block autoplay, 
-        // so you might need a user interaction (like a button click) to start it.
         music.play().catch(error => {
-            console.log("Autoplay blocked. User interaction required:", error);
+            console.error("Music playback failed, likely due to browser policy:", error);
         });
     }
+
+    // 2. Hide Overlay
+    overlay.style.opacity = '0';
+    setTimeout(() => {
+        overlay.style.visibility = 'hidden';
+    }, 1000); // 1 second matches the CSS transition time
+
+    // 3. Start Animations
+    startAnimations();
 }
 
 // 🎈 Dynamic Balloon Creation
@@ -26,10 +36,10 @@ function createBalloon() {
 
     document.body.appendChild(balloon);
 
-    // Remove the balloon after it has finished its animation (8s floatUp)
+    // Balloon animation duration is now 5s (updated in CSS floatUp)
     setTimeout(() => {
         balloon.remove();
-    }, 8000); 
+    }, 5000); 
 }
 
 
@@ -42,56 +52,58 @@ function createConfetti() {
         const confetti = document.createElement('div');
         confetti.classList.add('confetti');
 
-        // Randomly set color and shape
         const color = colors[Math.floor(Math.random() * colors.length)];
         confetti.style.backgroundColor = color;
         
-        // Random size
-        const size = Math.random() * 10 + 5; // 5px to 15px
+        const size = Math.random() * 10 + 5; 
         confetti.style.width = `${size}px`;
         confetti.style.height = `${size}px`;
 
-        // Start position (randomly from left or right side)
         const isLeft = Math.random() > 0.5;
         confetti.style.left = isLeft ? `${Math.random() * 100}px` : `calc(100% - ${Math.random() * 100}px)`;
 
-        // Random animation duration and delay
-        const duration = Math.random() * 3 + 4; // 4s to 7s
-        const delay = Math.random() * 2; // 0s to 2s
+        // UPDATED: Faster duration (2s to 5s)
+        const duration = Math.random() * 3 + 2; // 2s to 5s
+        const delay = Math.random() * 1; // Shorter delay for faster burst
         confetti.style.animation = `fall ${duration}s ease-out ${delay}s forwards`;
         
-        // Random shape
         if (Math.random() > 0.5) {
-            confetti.style.borderRadius = '50%'; // Circles
+            confetti.style.borderRadius = '50%'; 
         } else {
-            confetti.style.transform = `rotate(${Math.random() * 360}deg)`; // Squares
+            confetti.style.transform = `rotate(${Math.random() * 360}deg)`; 
         }
 
         document.body.appendChild(confetti);
 
-        // Clean up confetti after its animation
+        // Clean up confetti
         setTimeout(() => {
             confetti.remove();
         }, (duration + delay) * 1000);
     }
 }
 
-// --- Initialize Effects ---
-document.addEventListener('DOMContentLoaded', () => {
+// Function to initialize all animations
+function startAnimations() {
     // 1. Start the first balloon
     createBalloon();
     
-    // 2. Start the confetti burst after a small delay
-    setTimeout(createConfetti, 500);
+    // 2. Start the confetti burst after a tiny delay
+    setTimeout(createConfetti, 100);
 
     // 3. Loop the balloon creation for a continuous effect
-    // Creates a new balloon every 10 seconds
-    setInterval(createBalloon, 10000); 
-    
-    // 4. Try to start the music
-    startMusic();
-});
+    // Creates a new balloon every 6 seconds (slightly longer than the 5s animation)
+    setInterval(createBalloon, 6000); 
+}
 
-// Note on music: To guarantee music playback, you might need 
-// to add a "Click to Enter" button on the page, and run startMusic() 
-// when the user clicks it.
+
+// --- Event Listener ---
+document.addEventListener('DOMContentLoaded', () => {
+    const startButton = document.getElementById('start-button');
+    if (startButton) {
+        // Attach the startGame function to the button click
+        startButton.addEventListener('click', startGame);
+    } else {
+        // Fallback: If no button, just start the animations
+        startAnimations();
+    }
+});
