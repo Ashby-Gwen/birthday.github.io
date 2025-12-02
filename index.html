@@ -1,36 +1,272 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday!</title>
-    <link rel="stylesheet" href="style.css">
-    
-    <audio id="background-music" src="your_birthday_song.mp3" loop></audio> 
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Happy Birthday — Interactive Letter</title>
+  <style>
+    :root{
+      --bg:#0f172a;
+      --card:#fff;
+      --accent:#ff6b6b;
+      --paper-width:900px;
+    }
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
+    body{
+      background: radial-gradient(ellipse at 10% 10%, rgba(255,255,255,0.03), transparent 10%),
+                  linear-gradient(180deg,#071225 0%, #082032 50%, #0f172a 100%);
+      display:flex;align-items:center;justify-content:center;padding:32px;overflow:hidden;
+      color:#111;
+    }
 
+    /* Container */
+    .stage{width:100%;max-width:1200px;display:flex;gap:24px;align-items:flex-start;}
+
+    /* Letter card */
+    .card{
+      width:var(--paper-width);max-width:calc(100% - 320px);background:var(--card);border-radius:14px;padding:28px;box-shadow:0 20px 40px rgba(2,6,23,0.6);position:relative;overflow:hidden;
+    }
+    .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .title{font-size:20px;font-weight:700;color:#0b2540}
+    .controls{display:flex;gap:8px;align-items:center}
+    button.control{background:transparent;border:1px solid rgba(11,37,64,0.08);padding:8px 12px;border-radius:8px;cursor:pointer}
+
+    /* letter area */
+    .letter-area{background:linear-gradient(180deg,#fff 0%, #f8fbff 100%);padding:22px;border-radius:10px;border:1px solid rgba(10,30,50,0.04);min-height:360px;position:relative}
+    .letter{min-height:260px;outline:none;font-size:18px;color:#0b2540;line-height:1.6}
+    .letter:empty::before{content:"Click here to add your letter content (type or paste).";color:#7a8897}
+
+    /* photo placeholder */
+    .photo-wrap{width:260px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:12px}
+    .photo{
+      width:220px;height:220px;border-radius:12px;overflow:hidden;background:linear-gradient(180deg,#e6eefb,#e8f6ff);display:flex;align-items:center;justify-content:center;border:2px dashed rgba(255,107,107,0.12);position:relative;box-shadow:0 10px 30px rgba(2,6,23,0.2);
+      animation:float 4s ease-in-out infinite;
+    }
+    .photo img{width:100%;height:100%;object-fit:cover;display:block}
+    .photo .placeholder{color:#0b2540;opacity:0.6;padding:12px;text-align:center}
+
+    @keyframes float{
+      0%{transform:translateY(0)}
+      50%{transform:translateY(-12px)}
+      100%{transform:translateY(0)}
+    }
+
+    /* Balloon */
+    .balloon{position:absolute;left:50%;transform:translateX(-50%) translateY(100%);bottom:-120px;width:92px;height:130px;border-radius:60% 60% 55% 55%;background:linear-gradient(180deg,#ff8ba7,#ff4d6d);display:flex;align-items:flex-end;justify-content:center;box-shadow:0 12px 30px rgba(255,77,109,0.18);z-index:40}
+    .balloon::after{content:'';width:2px;height:60px;background:linear-gradient(180deg,#b32b3b,#6b1b28);position:absolute;bottom:-58px}
+    .balloon.hidden{display:none}
+
+    /* Balloon animation uses JS to apply class .fly */
+    .balloon.fly{
+      animation:balloonRise 3.6s cubic-bezier(.16,.9,.38,1) forwards;
+    }
+    @keyframes balloonRise{
+      0%{transform:translateX(-50%) translateY(60vh) scale(0.9);opacity:0}
+      10%{opacity:1}
+      100%{transform:translateX(-5%) translateY(-160vh) scale(0.9);opacity:0}
+    }
+
+    /* Confetti canvas sits above the letter area */
+    .confetti-canvas{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:45}
+
+    /* Footer small notes */
+    .meta{margin-top:12px;color:#536779;font-size:13px}
+
+    /* responsive */
+    @media(max-width:1000px){
+      .stage{flex-direction:column;align-items:center}
+      .photo-wrap{order:-1}
+      .card{max-width:100%}
+    }
+  </style>
 </head>
 <body>
-
-    <div id="start-overlay">
-        <button id="start-button">🎉 Click to Open the Birthday Letter! 🎉</button>
-    </div>
-
-    <div id="letter-container">
-        <div id="letter-content">
-            <h2>Happy Birthday, [Name]!</h2>
-            <p>Dear [Name],</p>
-            <p>I hope your day is filled with joy, laughter, and everything that makes you happy. You deserve the best!</p>
-            
-            <div id="photo-placeholder">
-                <img src="placeholder-image.jpg" alt="A special birthday photo">
-            </div>
-
-            <p>Remember all the great times we've shared. Wishing you a year ahead that is even more amazing!</p>
-            <p>With all my love,<br>[Your Name]</p>
+  <div class="stage">
+    <div class="card" id="card">
+      <div class="card-header">
+        <div class="title">Happy Birthday — Letter</div>
+        <div class="controls">
+          <button class="control" id="playMusicBtn">Play Music</button>
+          <button class="control" id="balloonBtn">Send Balloon</button>
+          <button class="control" id="confettiBtn">Confetti</button>
+          <a class="control" id="downloadBtn" href="#">Download</a>
         </div>
-        
+      </div>
+
+      <div class="letter-area" id="letterArea">
+        <canvas class="confetti-canvas" id="confetti"></canvas>
+        <div class="balloon hidden" id="balloon" aria-hidden="true"></div>
+        <div id="letter" class="letter" contenteditable="true" spellcheck="true">
+          <!-- Add your letter content here. This area is editable — click to type or paste. -->
+        </div>
+      </div>
+
+      <div class="meta">Tip: Click the letter area to edit content. Use the photo panel to replace the image. Autoplay may be blocked by some browsers; press "Play Music" if needed.</div>
     </div>
-    
-    <script src="script.js"></script>
+
+    <div class="photo-wrap">
+      <div style="display:flex;gap:8px;width:100%;align-items:center;justify-content:center">
+        <label for="photoInput" class="control" style="cursor:pointer">Change Photo</label>
+        <input id="photoInput" type="file" accept="image/*" style="display:none">
+      </div>
+      <div class="photo" id="photo">
+        <div class="placeholder">Photo<br>placeholder</div>
+      </div>
+      <div style="font-size:13px;color:#cfe7ff;text-align:center;max-width:260px">Optional: upload a photo — it will float gently.</div>
+    </div>
+  </div>
+
+  <!-- background audio (ignored until user clicks Play in many browsers) -->
+  <audio id="bgm" loop preload="auto">
+    <source src="https://cdn.pixabay.com/download/audio/2021/12/15/audio_8a1b4b4a42.mp3?filename=happy-ukulele-2-7042.mp3" type="audio/mpeg">
+    <!-- Replace with your own music file URL or local file path -->
+  </audio>
+
+  <script>
+    // Simple progressive enhancement and small utility helpers
+    const balloon = document.getElementById('balloon');
+    const balloonBtn = document.getElementById('balloonBtn');
+    const confettiBtn = document.getElementById('confettiBtn');
+    const playMusicBtn = document.getElementById('playMusicBtn');
+    const bgm = document.getElementById('bgm');
+    const confettiCanvas = document.getElementById('confetti');
+    const letterArea = document.getElementById('letterArea');
+    const photoEl = document.getElementById('photo');
+    const photoInput = document.getElementById('photoInput');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const letter = document.getElementById('letter');
+
+    // Balloon: trigger once per click; allow retrigger after animation ends
+    function sendBalloon(){
+      balloon.classList.remove('hidden');
+      balloon.classList.remove('fly');
+      // force reflow to restart animation
+      void balloon.offsetWidth;
+      balloon.classList.add('fly');
+      balloon.addEventListener('animationend', ()=>{
+        balloon.classList.add('hidden');
+      },{once:true});
+    }
+    balloonBtn.addEventListener('click', sendBalloon);
+
+    // Music play/pause
+    let playing=false;
+    playMusicBtn.addEventListener('click', async ()=>{
+      try{
+        if(!playing){
+          await bgm.play();
+          playing=true;playMusicBtn.textContent='Pause Music';
+        } else {
+          bgm.pause();playing=false;playMusicBtn.textContent='Play Music';
+        }
+      }catch(e){
+        console.warn('Audio play blocked',e);
+      }
+    });
+
+    // Photo upload
+    photoInput.addEventListener('change', (e)=>{
+      const file = e.target.files && e.target.files[0];
+      if(!file) return;
+      const url = URL.createObjectURL(file);
+      photoEl.innerHTML = '';
+      const img = document.createElement('img'); img.src=url; img.alt='Uploaded photo';
+      photoEl.appendChild(img);
+    });
+
+    // Download letter as simple HTML snapshot
+    downloadBtn.addEventListener('click', (e)=>{
+      e.preventDefault();
+      const content = `<!doctype html><meta charset="utf-8"><title>My Letter</title><style>body{font-family:system-ui,Segoe UI,Roboto,Arial;padding:32px;background:#fff;color:#0b2540}</style><div>${letter.innerHTML}</div>`;
+      const blob = new Blob([content],{type:'text/html'});
+      const url = URL.createObjectURL(blob);
+      downloadBtn.href = url; downloadBtn.download = 'birthday-letter.html';
+      // trigger proceeding navigation so the user can save
+      setTimeout(()=>{ URL.revokeObjectURL(url); },30000);
+      // allow user to actually click the link to download (we set href)
+    });
+
+    // Confetti system — lightweight particle emitter from both sides of the letter area
+    (function(){
+      const ctx = confettiCanvas.getContext('2d');
+      let w=0,h=0,particles=[];
+      function resize(){
+        const r=window.devicePixelRatio||1;
+        w=confettiCanvas.width = letterArea.clientWidth * r;
+        h=confettiCanvas.height = letterArea.clientHeight * r;
+        confettiCanvas.style.width = letterArea.clientWidth+'px';
+        confettiCanvas.style.height = letterArea.clientHeight+'px';
+        ctx.scale(r,r);
+      }
+      window.addEventListener('resize', resize); resize();
+
+      function rand(min,max){return Math.random()*(max-min)+min}
+      function makeParticle(x,y,dir){
+        return {
+          x,y,
+          vx: rand(60,160) * (dir==='left'?1:-1) / 60,
+          vy: rand(-2,-10),
+          size: Math.round(rand(6,12)),
+          rot: rand(0,360),
+          vrot: rand(-8,8),
+          life: rand(60,110),
+          color: ['#FF6B6B','#FFD166','#6BCB77','#4D96FF','#C084FC'][Math.floor(rand(0,5))]
+        }
+      }
+
+      function emitBurst(){
+        const rect = letterArea.getBoundingClientRect();
+        const localLeft = 0; const localRight = rect.width;
+        // create particles from left and right sides
+        for(let i=0;i<60;i++){
+          const y = rand(20, rect.height-20);
+          particles.push(makeParticle(0,y,'left'));
+          particles.push(makeParticle(rect.width,y,'right'));
+        }
+      }
+
+      function update(){
+        for(let i=particles.length-1;i>=0;i--){
+          const p = particles[i];
+          p.x += p.vx; p.y += p.vy; p.vy += 0.25; p.rot += p.vrot; p.life--;
+          if(p.y>h/ (window.devicePixelRatio||1) + 40 || p.life<=0) particles.splice(i,1);
+        }
+      }
+      function draw(){
+        ctx.clearRect(0,0,confettiCanvas.width, confettiCanvas.height);
+        for(const p of particles){
+          ctx.save();
+          ctx.translate(p.x+10, p.y+10);
+          ctx.rotate(p.rot * Math.PI/180);
+          ctx.fillStyle = p.color; ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size*0.6);
+          ctx.restore();
+        }
+      }
+      function loop(){ update(); draw(); requestAnimationFrame(loop); }
+      loop();
+
+      confettiBtn.addEventListener('click', ()=>{ emitBurst(); });
+
+      // expose for auto triggers
+      window._emitConfetti = emitBurst;
+    })();
+
+    // small enhancement: auto-send one balloon on page load and small confetti pop
+    document.addEventListener('DOMContentLoaded', ()=>{
+      // try to trigger an initial gentle floating balloon and confetti
+      // We won't auto-play audio for browser policy reasons
+      setTimeout(()=>{ sendBalloon(); },800);
+      setTimeout(()=>{ if(window._emitConfetti) window._emitConfetti(); },1200);
+    });
+
+    // Accessibility: focusable letter area label
+    letter.addEventListener('keydown', (e)=>{
+      // simple keyboard shortcut: Ctrl+Enter to trigger balloon
+      if((e.ctrlKey || e.metaKey) && e.key === 'Enter'){
+        sendBalloon();
+      }
+    });
+
+  </script>
 </body>
 </html>
