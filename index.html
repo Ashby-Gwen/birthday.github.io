@@ -401,14 +401,14 @@
       requestAnimationFrame(animateBalloons);
     }
 
-    /* PHOTO COLLAGE: clicking a photo opens upload for that slot */
-    collage.addEventListener('click', (e)=>{
-      const p = e.target.closest('.photo');
-      if(!p) return;
-      const idx = p.dataset.index || '1';
-      photoInput.dataset.target = idx;
-      photoInput.click();
-    });
+    // /* PHOTO COLLAGE: clicking a photo opens upload for that slot */
+    // collage.addEventListener('click', (e)=>{
+    //   const p = e.target.closest('.photo');
+    //   if(!p) return;
+    //   const idx = p.dataset.index || '1';
+    //   photoInput.dataset.target = idx;
+    //   photoInput.click();
+    // });
 
     photoInput.addEventListener('change', (e)=>{
       const file = e.target.files && e.target.files[0]; if(!file) return;
