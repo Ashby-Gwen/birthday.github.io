@@ -1,294 +1,454 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Happy Birthday — Interactive Letter</title>
   <style>
-    :root{
-      --bg-1:#0b1020;
-      --bg-2:#0b3b6f;
-      --card:#fffdf8;
-      --accent1:#ff3b6f;
-      --accent2:#ffd166;
-      --accent3:#6ee7b7;
-      --accent4:#6b8cff;
-      --paper-width:920px;
+    :root {
+      --bg-1: #0b1020;
+      --bg-2: #0b3b6f;
+      --card: #fffdf8;
+      --accent1: #ff3b6f;
+      --accent2: #ffd166;
+      --accent3: #6ee7b7;
+      --accent4: #6b8cff;
+      --paper-width: 920px;
     }
-    html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
-    body{
-      background: radial-gradient(1200px 600px at 10% 10%, rgba(255,255,255,0.04), transparent 8%),
-                  linear-gradient(180deg,var(--bg-1) 0%, var(--bg-2) 60%);
-      display:flex;align-items:center;justify-content:center;padding:28px;overflow:hidden;color:#111;
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      font-family: Inter, system-ui, Segoe UI, Roboto, 'Helvetica Neue', Arial
+    }
+
+    body {
+      background: radial-gradient(1200px 600px at 10% 10%, rgba(255, 255, 255, 0.04), transparent 8%),
+        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 60%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+      overflow: hidden;
+      color: #111;
     }
 
     /* Container */
-    .stage{width:100%;max-width:1280px;display:flex;gap:28px;align-items:flex-start}
+    .stage {
+      width: 100%;
+      max-width: 1280px;
+      display: flex;
+      gap: 28px;
+      align-items: flex-start
+    }
 
     /* Letter card */
-    .card{
-      width:var(--paper-width);max-width:calc(100% - 320px);background:var(--card);border-radius:16px;padding:26px;box-shadow:0 30px 80px rgba(6,15,40,0.6);position:relative;overflow:hidden;border:1px solid rgba(13,46,94,0.06)
+    .card {
+      width: var(--paper-width);
+      max-width: calc(100% - 320px);
+      background: var(--card);
+      border-radius: 16px;
+      padding: 26px;
+      box-shadow: 0 30px 80px rgba(6, 15, 40, 0.6);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(13, 46, 94, 0.06)
     }
-    .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-    .title{font-size:22px;font-weight:800;color:var(--bg-2);letter-spacing:0.4px}
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px
+    }
+
+    .title {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--bg-2);
+      letter-spacing: 0.4px
+    }
 
     /* letter area */
-    .letter-area{background:linear-gradient(180deg,#fffefc 0%, #fff6ee 100%);padding:24px;border-radius:12px;border:1px solid rgba(10,30,50,0.04);min-height:420px;position:relative;overflow:hidden}
-    .letter{min-height:320px;outline:none;font-size:18px;color:#0b2540;line-height:1.6}
-    .letter:empty::before{content:"Click here to add your letter content (type or paste).";color:#8b97a6}
+    .letter-area {
+      background: linear-gradient(180deg, #fffefc 0%, #fff6ee 100%);
+      padding: 24px;
+      border-radius: 12px;
+      border: 1px solid rgba(10, 30, 50, 0.04);
+      min-height: 420px;
+      position: relative;
+      overflow: hidden
+    }
+
+    .letter {
+      min-height: 320px;
+      outline: none;
+      font-size: 18px;
+      color: #0b2540;
+      line-height: 1.6
+    }
+
+    .letter:empty::before {
+      content: "Click here to add your letter content (type or paste).";
+      color: #8b97a6
+    }
 
     /* photo placeholder */
-    .photo-wrap{width:280px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:12px}
-    .photo{
-      width:240px;height:240px;border-radius:16px;overflow:hidden;background:linear-gradient(180deg,#fffcf2,#fff7f0);display:flex;align-items:center;justify-content:center;border:3px solid rgba(255,59,111,0.14);position:relative;box-shadow:0 16px 50px rgba(11,30,70,0.45);
-      animation:float 4s ease-in-out infinite;
+    .photo-wrap {
+      width: 280px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px
     }
-    .photo img{width:100%;height:100%;object-fit:cover;display:block}
-    .photo .placeholder{color:var(--bg-2);opacity:0.9;padding:12px;text-align:center;font-weight:600}
 
-    @keyframes float{0%{transform:translateY(0) rotate(-0.5deg)}50%{transform:translateY(-14px) rotate(0.5deg)}100%{transform:translateY(0) rotate(-0.5deg)}}
+    .photo {
+      width: 240px;
+      height: 240px;
+      border-radius: 16px;
+      overflow: hidden;
+      background: linear-gradient(180deg, #fffcf2, #fff7f0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid rgba(255, 59, 111, 0.14);
+      position: relative;
+      box-shadow: 0 16px 50px rgba(11, 30, 70, 0.45);
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block
+    }
+
+    .photo .placeholder {
+      color: var(--bg-2);
+      opacity: 0.9;
+      padding: 12px;
+      text-align: center;
+      font-weight: 600
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0) rotate(-0.5deg)
+      }
+
+      50% {
+        transform: translateY(-14px) rotate(0.5deg)
+      }
+
+      100% {
+        transform: translateY(0) rotate(-0.5deg)
+      }
+    }
 
     /* Balloons (generated by JS) */
-    .balloon{
-      position:absolute;bottom:-160px;width:90px;height:120px;border-radius:60% 60% 55% 55%;display:flex;align-items:flex-end;justify-content:center;box-shadow:0 14px 40px rgba(0,0,0,0.18);z-index:40;transform-origin:center bottom;transition:transform 0.2s ease;
+    .balloon {
+      position: absolute;
+      bottom: -160px;
+      width: 90px;
+      height: 120px;
+      border-radius: 60% 60% 55% 55%;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.18);
+      z-index: 40;
+      transform-origin: center bottom;
+      transition: transform 0.2s ease;
     }
-    .balloon::after{content:'';position:absolute;bottom:-64px;width:2px;height:64px;border-radius:2px;opacity:0.9}
 
-    @keyframes rise{
-      0%{transform:translateY(0) scale(0.92);opacity:0}
-      8%{opacity:1}
-      100%{transform:translateY(-220vh) scale(0.92);opacity:0}
+    .balloon::after {
+      content: '';
+      position: absolute;
+      bottom: -64px;
+      width: 2px;
+      height: 64px;
+      border-radius: 2px;
+      opacity: 0.9
+    }
+
+    @keyframes rise {
+      0% {
+        transform: translateY(0) scale(0.92);
+        opacity: 0
+      }
+
+      8% {
+        opacity: 1
+      }
+
+      100% {
+        transform: translateY(-220vh) scale(0.92);
+        opacity: 0
+      }
     }
 
     /* Confetti canvas sits above the letter area */
-    .confetti-canvas{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:45}
+    .confetti-canvas {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 45
+    }
 
     /* Footer small notes */
-    .meta{margin-top:12px;color:#536779;font-size:13px}
+    .meta {
+      margin-top: 12px;
+      color: #536779;
+      font-size: 13px
+    }
 
     /* responsive */
-    @media(max-width:1000px){.stage{flex-direction:column;align-items:center}.photo-wrap{order:-1}.card{max-width:100%}}
+    @media(max-width:1000px) {
+      .stage {
+        flex-direction: column;
+        align-items: center
+      }
+
+      .photo-wrap {
+        order: -1
+      }
+
+      .card {
+        max-width: 100%
+      }
+    }
   </style>
 </head>
+
 <body>
   <div class="stage">
     <div class="card" id="card">
       <div class="card-header">
-        <div class="title">Happy Birthday — Letter<\/div>
-<div class="controls">
-  <button class="control" id="playMusicBtn">Play Music</button>
-    </div>
+        <div class="title">Happy Birthday — Letter</div>
+            <div class="controls">
+              <button class="control" id="playMusicBtn">Play Music</button>
+            </div>
+        </div>
+
+        <div class="letter-area" id="letterArea">
+          <canvas class="confetti-canvas" id="confetti"></canvas>
+          <div id="balloonLayer" aria-hidden="true"></div>
+          <div id="letter" class="letter" contenteditable="true" spellcheck="true"></div>
+        </div>
+
+        <div class="meta">Tip: Click the letter area to edit content. Photo can be replaced by clicking the photo
+          placeholder.</div>
       </div>
 
-      <div class="letter-area" id="letterArea">
-        <canvas class="confetti-canvas" id="confetti"></canvas>
-        <div id="balloonLayer" aria-hidden="true"></div>
-        <div id="letter" class="letter" contenteditable="true" spellcheck="true"></div>
+      <div class="photo-wrap">
+        <input id="photoInput" type="file" accept="image/*" style="display:none">
+        <div class="photo" id="photo" title="Click to change photo">
+          <div class="placeholder">Photo<br>placeholder</div>
+        </div>
+        <div style="font-size:13px;color:#cfe7ff;text-align:center;max-width:260px">Optional: upload a photo — it will
+          float gently.</div>
       </div>
-
-      <div class="meta">Tip: Click the letter area to edit content. Photo can be replaced by clicking the photo placeholder.</div>
     </div>
 
-    <div class="photo-wrap">
-      <input id="photoInput" type="file" accept="image/*" style="display:none">
-      <div class="photo" id="photo" title="Click to change photo">
-        <div class="placeholder">Photo<br>placeholder</div>
-      </div>
-      <div style="font-size:13px;color:#cfe7ff;text-align:center;max-width:260px">Optional: upload a photo — it will float gently.</div>
-    </div>
-  </div>
+    <!-- background audio -->
+    <audio id="bgm" loop preload="auto">
+      <source src="bday_song.mp3" type="audio/mpeg">
+    </audio>
 
-  <!-- background audio -->
-  <audio id="bgm" loop preload="auto">
-    <source src="bday_song.mp3" type="audio/mpeg">
-  </audio>
+    <script>
+      /* Configuration */
+      const BALLOON_COLORS = [
+        ['linear-gradient(180deg,#ff3b6f,#ff6b9a)', 'linear-gradient(180deg,#ff6b6b,#ff3b6f)'],
+        ['linear-gradient(180deg,#ffd166,#ffb46b)', 'linear-gradient(180deg,#ffe08a,#ffd166)'],
+        ['linear-gradient(180deg,#6ee7b7,#2ec49a)', 'linear-gradient(180deg,#4ad19a,#0fb07e)'],
+        ['linear-gradient(180deg,#6b8cff,#4b6cff)', 'linear-gradient(180deg,#8fb1ff,#6b8cff)']
+      ];
+      const POP_COLORS = ['#ff3b6f', '#ffd166', '#6ee7b7', '#6b8cff', '#c084fc', '#ff8ba7'];
 
-  <script>
-    /* Configuration */
-    const BALLOON_COLORS = [
-      ['linear-gradient(180deg,#ff3b6f,#ff6b9a)','linear-gradient(180deg,#ff6b6b,#ff3b6f)'],
-      ['linear-gradient(180deg,#ffd166,#ffb46b)','linear-gradient(180deg,#ffe08a,#ffd166)'],
-      ['linear-gradient(180deg,#6ee7b7,#2ec49a)','linear-gradient(180deg,#4ad19a,#0fb07e)'],
-      ['linear-gradient(180deg,#6b8cff,#4b6cff)','linear-gradient(180deg,#8fb1ff,#6b8cff)']
-    ];
-    const POP_COLORS = ['#ff3b6f','#ffd166','#6ee7b7','#6b8cff','#c084fc','#ff8ba7'];
+      const letterArea = document.getElementById('letterArea');
+      const balloonLayer = document.getElementById('balloonLayer');
+      const confettiCanvas = document.getElementById('confetti');
+      const bgm = document.getElementById('bgm');
+      const photo = document.getElementById('photo');
+      const photoInput = document.getElementById('photoInput');
 
-    const letterArea = document.getElementById('letterArea');
-    const balloonLayer = document.getElementById('balloonLayer');
-    const confettiCanvas = document.getElementById('confetti');
-    const bgm = document.getElementById('bgm');
-    const photo = document.getElementById('photo');
-    const photoInput = document.getElementById('photoInput');
-
-    // Play music on load if allowed
-    async function tryPlayMusic(){
-      try{
-        await bgm.play();
-      }catch(e){
-        // autoplay blocked — do nothing (no buttons per request)
-        console.warn('Autoplay blocked', e);
-      }
-    }
-
-    /* BALLOON SYSTEM: continuously spawn balloons with random horizontal drift */
-    function spawnBalloon(){
-      const b = document.createElement('div');
-      b.className = 'balloon';
-      // randomize color gradient pair
-      const col = BALLOON_COLORS[Math.floor(Math.random()*BALLOON_COLORS.length)][0];
-      b.style.background = col;
-      // string color
-      b.style.setProperty('--string', '#2b2b2b');
-      // size
-      const scale = (Math.random()*0.35)+0.8; // 0.8 - 1.15
-      b.style.width = Math.round(80*scale)+'px';
-      b.style.height = Math.round(110*scale)+'px';
-      // horizontal position (within card)
-      const rect = letterArea.getBoundingClientRect();
-      const x = Math.random()*(rect.width*0.9)+rect.left + window.scrollX - rect.left; // 0..width
-      b.style.left = (Math.random()*90)+'%';
-      // string styling through pseudo-element via inline style for ::after not possible — create small string element
-      const str = document.createElement('div');
-      str.style.position='absolute';str.style.width='2px';str.style.height='64px';str.style.left='50%';str.style.transform='translateX(-50%)';str.style.bottom='-64px';
-      str.style.background='rgba(40,40,40,0.7)';str.style.borderRadius='2px';
-      b.appendChild(str);
-
-      // random drift and rotation
-      const drift = (Math.random()*60)-30; // -30 to 30 vw translateX
-      const duration = Math.random()*6 + 6; // 6 - 12s
-      const delay = Math.random()*2; // small delay
-      b.style.animation = `rise ${duration}s linear ${delay}s forwards`;
-      // add subtle horizontal movement via transform animation using JS (requestAnimationFrame)
-      b.dataset.start = performance.now();
-      b.dataset.duration = duration*1000 + delay*1000;
-      b.dataset.drift = drift;
-      b.dataset.offset = (Math.random()*40)-20;
-
-      balloonLayer.appendChild(b);
-
-      // remove after finished
-      setTimeout(()=>{ if(b.parentNode) b.parentNode.removeChild(b); }, (duration+delay)*1000 + 200);
-    }
-
-    // loop spawner
-    function startBalloonLoop(ratePerSec=0.6){ // average spawn per second
-      const interval = 1000 / ratePerSec;
-      return setInterval(spawnBalloon, interval * (0.75 + Math.random()*0.5));
-    }
-
-    /* CONFETTI SYSTEM: continuous emitter */
-    (function(){
-      const ctx = confettiCanvas.getContext('2d');
-      let w=0,h=0,particles=[];
-      function resize(){
-        const r=window.devicePixelRatio||1;
-        w=confettiCanvas.width = letterArea.clientWidth * r;
-        h=confettiCanvas.height = letterArea.clientHeight * r;
-        confettiCanvas.style.width = letterArea.clientWidth+'px';
-        confettiCanvas.style.height = letterArea.clientHeight+'px';
-        ctx.setTransform(r,0,0,r,0,0);
-      }
-      window.addEventListener('resize', resize); resize();
-
-      function rand(min,max){return Math.random()*(max-min)+min}
-      function makeParticle(x,y,dir){
-        return {
-          x,y,
-          vx: rand(60,260) * (dir==='left'?1:-1) / 60,
-          vy: rand(-6,-14),
-          size: Math.round(rand(6,14)),
-          rot: rand(0,360),
-          vrot: rand(-10,10),
-          life: rand(80,160),
-          color: POP_COLORS[Math.floor(rand(0,POP_COLORS.length))]
+      // Play music on load if allowed
+      async function tryPlayMusic() {
+        try {
+          await bgm.play();
+        } catch (e) {
+          // autoplay blocked — do nothing (no buttons per request)
+          console.warn('Autoplay blocked', e);
         }
       }
 
-      function emitBurst(amount=100){
+      /* BALLOON SYSTEM: continuously spawn balloons with random horizontal drift */
+      function spawnBalloon() {
+        const b = document.createElement('div');
+        b.className = 'balloon';
+        // randomize color gradient pair
+        const col = BALLOON_COLORS[Math.floor(Math.random() * BALLOON_COLORS.length)][0];
+        b.style.background = col;
+        // string color
+        b.style.setProperty('--string', '#2b2b2b');
+        // size
+        const scale = (Math.random() * 0.35) + 0.8; // 0.8 - 1.15
+        b.style.width = Math.round(80 * scale) + 'px';
+        b.style.height = Math.round(110 * scale) + 'px';
+        // horizontal position (within card)
         const rect = letterArea.getBoundingClientRect();
-        for(let i=0;i<amount;i++){
-          const side = Math.random()>0.5 ? 'left' : 'right';
-          const y = rand(20, rect.height-20);
-          const x = side==='left' ? -10 : rect.width + 10;
-          particles.push(makeParticle(x,y, side));
+        const x = Math.random() * (rect.width * 0.9) + rect.left + window.scrollX - rect.left; // 0..width
+        b.style.left = (Math.random() * 90) + '%';
+        // string styling through pseudo-element via inline style for ::after not possible — create small string element
+        const str = document.createElement('div');
+        str.style.position = 'absolute'; str.style.width = '2px'; str.style.height = '64px'; str.style.left = '50%'; str.style.transform = 'translateX(-50%)'; str.style.bottom = '-64px';
+        str.style.background = 'rgba(40,40,40,0.7)'; str.style.borderRadius = '2px';
+        b.appendChild(str);
+
+        // random drift and rotation
+        const drift = (Math.random() * 60) - 30; // -30 to 30 vw translateX
+        const duration = Math.random() * 6 + 6; // 6 - 12s
+        const delay = Math.random() * 2; // small delay
+        b.style.animation = `rise ${duration}s linear ${delay}s forwards`;
+        // add subtle horizontal movement via transform animation using JS (requestAnimationFrame)
+        b.dataset.start = performance.now();
+        b.dataset.duration = duration * 1000 + delay * 1000;
+        b.dataset.drift = drift;
+        b.dataset.offset = (Math.random() * 40) - 20;
+
+        balloonLayer.appendChild(b);
+
+        // remove after finished
+        setTimeout(() => { if (b.parentNode) b.parentNode.removeChild(b); }, (duration + delay) * 1000 + 200);
+      }
+
+      // loop spawner
+      function startBalloonLoop(ratePerSec = 0.6) { // average spawn per second
+        const interval = 1000 / ratePerSec;
+        return setInterval(spawnBalloon, interval * (0.75 + Math.random() * 0.5));
+      }
+
+      /* CONFETTI SYSTEM: continuous emitter */
+      (function () {
+        const ctx = confettiCanvas.getContext('2d');
+        let w = 0, h = 0, particles = [];
+        function resize() {
+          const r = window.devicePixelRatio || 1;
+          w = confettiCanvas.width = letterArea.clientWidth * r;
+          h = confettiCanvas.height = letterArea.clientHeight * r;
+          confettiCanvas.style.width = letterArea.clientWidth + 'px';
+          confettiCanvas.style.height = letterArea.clientHeight + 'px';
+          ctx.setTransform(r, 0, 0, r, 0, 0);
         }
-      }
+        window.addEventListener('resize', resize); resize();
 
-      // gentle continuous emitter
-      function emitContinuous(){
-        // emit small bursts periodically to feel continuous
-        emitBurst(40);
-        setTimeout(emitContinuous, 1400 + Math.random()*900);
-      }
-
-      function update(){
-        for(let i=particles.length-1;i>=0;i--){
-          const p = particles[i];
-          p.x += p.vx; p.y += p.vy; p.vy += 0.28; p.rot += p.vrot; p.life--;
-          if(p.y>h/ (window.devicePixelRatio||1) + 60 || p.life<=0) particles.splice(i,1);
+        function rand(min, max) { return Math.random() * (max - min) + min }
+        function makeParticle(x, y, dir) {
+          return {
+            x, y,
+            vx: rand(60, 260) * (dir === 'left' ? 1 : -1) / 60,
+            vy: rand(-6, -14),
+            size: Math.round(rand(6, 14)),
+            rot: rand(0, 360),
+            vrot: rand(-10, 10),
+            life: rand(80, 160),
+            color: POP_COLORS[Math.floor(rand(0, POP_COLORS.length))]
+          }
         }
-      }
-      function draw(){
-        ctx.clearRect(0,0,confettiCanvas.width, confettiCanvas.height);
-        for(const p of particles){
-          ctx.save();
-          ctx.translate(p.x+10, p.y+10);
-          ctx.rotate(p.rot * Math.PI/180);
-          ctx.fillStyle = p.color; ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size*0.6);
-          ctx.restore();
+
+        function emitBurst(amount = 100) {
+          const rect = letterArea.getBoundingClientRect();
+          for (let i = 0; i < amount; i++) {
+            const side = Math.random() > 0.5 ? 'left' : 'right';
+            const y = rand(20, rect.height - 20);
+            const x = side === 'left' ? -10 : rect.width + 10;
+            particles.push(makeParticle(x, y, side));
+          }
         }
-      }
-      function loop(){ update(); draw(); requestAnimationFrame(loop); }
-      loop();
 
-      // expose controls
-      window._emitConfetti = emitBurst;
-      window._startConfetti = emitContinuous;
-    })();
+        // gentle continuous emitter
+        function emitContinuous() {
+          // emit small bursts periodically to feel continuous
+          emitBurst(40);
+          setTimeout(emitContinuous, 1400 + Math.random() * 900);
+        }
 
-    // photo upload via clicking photo
-    photo.addEventListener('click', ()=> photoInput.click());
-    photoInput.addEventListener('change', (e)=>{
-      const file = e.target.files && e.target.files[0]; if(!file) return;
-      const url = URL.createObjectURL(file);
-      photo.innerHTML = '';
-      const img = document.createElement('img'); img.src = url; img.alt = 'Uploaded photo'; photo.appendChild(img);
-    });
+        function update() {
+          for (let i = particles.length - 1; i >= 0; i--) {
+            const p = particles[i];
+            p.x += p.vx; p.y += p.vy; p.vy += 0.28; p.rot += p.vrot; p.life--;
+            if (p.y > h / (window.devicePixelRatio || 1) + 60 || p.life <= 0) particles.splice(i, 1);
+          }
+        }
+        function draw() {
+          ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+          for (const p of particles) {
+            ctx.save();
+            ctx.translate(p.x + 10, p.y + 10);
+            ctx.rotate(p.rot * Math.PI / 180);
+            ctx.fillStyle = p.color; ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+            ctx.restore();
+          }
+        }
+        function loop() { update(); draw(); requestAnimationFrame(loop); }
+        loop();
 
-    // Main onload init
-    document.addEventListener('DOMContentLoaded', ()=>{
-      // start music (best-effort)
-      tryPlayMusic();
+        // expose controls
+        window._emitConfetti = emitBurst;
+        window._startConfetti = emitContinuous;
+      })();
 
-      // start continuous confetti
-      if(window._startConfetti) window._startConfetti();
+      // photo upload via clicking photo
+      photo.addEventListener('click', () => photoInput.click());
+      photoInput.addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0]; if (!file) return;
+        const url = URL.createObjectURL(file);
+        photo.innerHTML = '';
+        const img = document.createElement('img'); img.src = url; img.alt = 'Uploaded photo'; photo.appendChild(img);
+      });
 
-      // spawn a few balloons immediately and then start loop
-      for(let i=0;i<6;i++){ setTimeout(spawnBalloon, i*300); }
-      const balloonLoop = startBalloonLoop(0.8); // ~0.8 balloons/sec average
+      // Main onload init
+      document.addEventListener('DOMContentLoaded', () => {
+        // start music (best-effort)
+        tryPlayMusic();
 
-      // add horizontal drift updates for balloons for nicer motion
-      function animateBalloons(){
-        const nodes = Array.from(document.querySelectorAll('.balloon'));
-        const rect = letterArea.getBoundingClientRect();
-        nodes.forEach((b, idx)=>{
-          const elapsed = (performance.now() - (b.dataset.start || performance.now()))/1000;
-          const duration = parseFloat(b.dataset.duration || 9000)/1000;
-          const drift = parseFloat(b.dataset.drift || 0);
-          const prog = Math.min(1, elapsed/duration);
-          // compute left as percent based on initial left + drift over progress
-          const initialLeft = parseFloat(b.style.left) || (Math.random()*90);
-          const newLeft = initialLeft + (drift * prog);
-          b.style.left = newLeft + '%';
-        });
+        // start continuous confetti
+        if (window._startConfetti) window._startConfetti();
+
+        // spawn a few balloons immediately and then start loop
+        for (let i = 0; i < 6; i++) { setTimeout(spawnBalloon, i * 300); }
+        const balloonLoop = startBalloonLoop(0.8); // ~0.8 balloons/sec average
+
+        // add horizontal drift updates for balloons for nicer motion
+        function animateBalloons() {
+          const nodes = Array.from(document.querySelectorAll('.balloon'));
+          const rect = letterArea.getBoundingClientRect();
+          nodes.forEach((b, idx) => {
+            const elapsed = (performance.now() - (b.dataset.start || performance.now())) / 1000;
+            const duration = parseFloat(b.dataset.duration || 9000) / 1000;
+            const drift = parseFloat(b.dataset.drift || 0);
+            const prog = Math.min(1, elapsed / duration);
+            // compute left as percent based on initial left + drift over progress
+            const initialLeft = parseFloat(b.style.left) || (Math.random() * 90);
+            const newLeft = initialLeft + (drift * prog);
+            b.style.left = newLeft + '%';
+          });
+          requestAnimationFrame(animateBalloons);
+        }
         requestAnimationFrame(animateBalloons);
-      }
-      requestAnimationFrame(animateBalloons);
 
-      // cleanup on page unload
-      window.addEventListener('beforeunload', ()=>{ clearInterval(balloonLoop); });
-    });
+        // cleanup on page unload
+        window.addEventListener('beforeunload', () => { clearInterval(balloonLoop); });
+      });
 
-  </script>
+    </script>
 </body>
+
 </html>
