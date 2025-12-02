@@ -234,26 +234,30 @@
       <div class="letter-area" id="letterArea">
         <canvas class="confetti-canvas" id="confetti"></canvas>
         <div id="balloonLayer" aria-hidden="true"></div>
-        <div id="letter" class="letter" contenteditable="false" spellcheck="true">
+        <div id="letter" class="letter" spellcheck="true">
           Happy Birthday Papa!
           
         </div>
       </div>
-
-      <div class="meta">Tip: Click the letter area to edit content. Click photos to replace them.</div>
     </div>
 
-    <div class="photo-wrap">
-      <div class="collage" id="collage">
-        <div class="photo p1" data-index="1"><div class="placeholder">Photo 1</div></div></div>
-        <div class="photo p2" data-index="2"><div class="placeholder">Photo 2</div></div></div>
-        <div class="photo p3" data-index="3"><div class="placeholder">Photo 3</div></div></div>
-        <div class="photo p4" data-index="4"><div class="placeholder">Photo 4</div></div></div>
+   <div class="photo-wrap">
+    <div class="collage" id="collage">
+      <div class="photo p1">
+        <div class="placeholder">Photo 1</div>
       </div>
-      <input id="photoInput" type="file" accept="image/*" style="display:none">
-      <div style="font-size:13px;color:#cfe7ff;text-align:center;max-width:320px">Optional: click any photo to upload/replace. Each photo floats independently.</div>
+      <div class="photo p2">
+        <div class="placeholder">Photo 2</div>
+      </div>
+      <div class="photo p3">
+        <div class="placeholder">Photo 3</div>
+      </div>
+      <div class="photo p4">
+        <div class="placeholder">Photo 4</div>
+      </div>
     </div>
   </div>
+
 
   <!-- background audio -->
   <audio id="bgm" loop preload="auto">
@@ -413,15 +417,15 @@
     //   photoInput.click();
     // });
 
-    photoInput.addEventListener('change', (e)=>{
-      const file = e.target.files && e.target.files[0]; if(!file) return;
-      const url = URL.createObjectURL(file);
-      const target = e.target.dataset.target || '1';
-      const slot = collage.querySelector('.photo[data-index="'+target+'"]');
-      if(!slot) return;
-      slot.innerHTML = '';
-      const img = document.createElement('img'); img.src=url; img.alt = 'Photo '+target; slot.appendChild(img);
-    });
+    // photoInput.addEventListener('change', (e)=>{
+    //   const file = e.target.files && e.target.files[0]; if(!file) return;
+    //   const url = URL.createObjectURL(file);
+    //   const target = e.target.dataset.target || '1';
+    //   const slot = collage.querySelector('.photo[data-index="'+target+'"]');
+    //   if(!slot) return;
+    //   slot.innerHTML = '';
+    //   const img = document.createElement('img'); img.src=url; img.alt = 'Photo '+target; slot.appendChild(img);
+    // });
 
     // Main onload init: start confetti then balloons and floating photos already animated via CSS
     document.addEventListener('DOMContentLoaded', ()=>{
