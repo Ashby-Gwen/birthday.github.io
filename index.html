@@ -11,253 +11,105 @@
       --bg-2: #0b3b6f;
       --card: #fffdf8;
       --accent1: #ff3b6f;
-      --accent2: #ffd166;
-      --accent3: #6ee7b7;
       --accent4: #6b8cff;
       --paper-width: 920px;
     }
 
-    html,
-    body {
+    html, body {
       height: 100%;
       margin: 0;
-      font-family: Inter, system-ui, Segoe UI, Roboto, 'Helvetica Neue', Arial
-    }
-
-    body {
+      font-family: Inter, system-ui, Segoe UI, Roboto, 'Helvetica Neue', Arial;
       background: radial-gradient(1200px 600px at 10% 10%, rgba(255, 255, 255, 0.04), transparent 8%),
-        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 60%);
+                  linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 60%);
       display: flex;
-      align-items: center;
       justify-content: center;
-      padding: 28px;
-      overflow: hidden;
-      color: #111;
+      align-items: center;
     }
 
-    /* Container */
     .stage {
-      width: 100%;
-      max-width: 1280px;
       display: flex;
       gap: 28px;
-      align-items: flex-start
+      flex-direction: column;
+      align-items: center;
     }
 
-    /* Letter card */
+    /* Envelope */
+    .envelope {
+      width: 300px;
+      height: 200px;
+      background: linear-gradient(180deg,#ff3b6f,#6b8cff);
+      border-radius: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      color: white;
+      font-weight: 800;
+      font-size: 22px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+      transition: transform 0.5s ease;
+    }
+    .envelope.opened { transform: scale(0.9) rotateX(180deg); opacity: 0; }
+
+    /* Card */
     .card {
       width: var(--paper-width);
-      max-width: calc(100% - 320px);
+      max-width: 90%;
       background: var(--card);
       border-radius: 16px;
       padding: 26px;
       box-shadow: 0 30px 80px rgba(6, 15, 40, 0.6);
       position: relative;
       overflow: hidden;
-      border: 1px solid rgba(13, 46, 94, 0.06)
+      display: none; /* hidden until envelope clicked */
     }
 
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px
-    }
-
-    .title {
-      font-size: 22px;
-      font-weight: 800;
-      color: var(--bg-2);
-      letter-spacing: 0.4px
-    }
-
-    .controls{display:flex;align-items:center;gap:8px}
-    .control{background:linear-gradient(90deg,var(--accent1),var(--accent4));border:none;color:white;padding:8px 12px;border-radius:10px;cursor:pointer;box-shadow:0 8px 20px rgba(107,140,255,0.12);font-weight:700}
-
-    /* letter area */
     .letter-area {
       background: linear-gradient(180deg, #fffefc 0%, #fff6ee 100%);
       padding: 24px;
       border-radius: 12px;
       border: 1px solid rgba(10, 30, 50, 0.04);
-      min-height: 420px;
+      min-height: 320px;
       position: relative;
-      overflow: hidden
+      overflow: hidden;
     }
 
     .letter {
-      min-height: 320px;
-      outline: none;
-      font-size: 18px;
+      font-size: 20px;
       color: #0b2540;
-      line-height: 1.6
+      line-height: 1.6;
     }
 
-    .letter:empty::before {
-      content: "Click here to add your letter content (type or paste).";
-      color: #8b97a6
-    }
-
-    /* photo collage */
-    .photo-wrap {
-      width: 320px;
-      flex-shrink: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px
-    }
-
-    .collage {
-      width: 320px;
-      height: 320px;
-      position: relative;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .photo {
-      border-radius: 12px;
-      overflow: hidden;
-      background: linear-gradient(180deg,#fffcf2,#fff7f0);
-      border: 3px solid rgba(255, 59, 111, 0.08);
+    .confetti-canvas, #balloonLayer {
       position: absolute;
-      box-shadow: 0 16px 40px rgba(11, 30, 70, 0.35);
-      display:flex;align-items:center;justify-content:center;cursor:pointer
-    }
-    .photo img{width:100%;height:100%;object-fit:cover;display:block}
-    .photo .placeholder{color:var(--bg-2);opacity:0.9;padding:8px;text-align:center;font-weight:700}
-
-    /* individual photo sizes and layers */
-    .p1{width:180px;height:180px;left:8px;top:8px;z-index:5}
-    .p2{width:120px;height:120px;right:8px;top:18px;z-index:6}
-    .p3{width:140px;height:140px;left:28px;bottom:12px;z-index:7}
-    .p4{width:90px;height:90px;right:22px;bottom:30px;z-index:8}
-
-    /* floating with different durations */
-    @keyframes floatA{0%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-16px) rotate(1deg)}100%{transform:translateY(0) rotate(-1deg)}}
-    @keyframes floatB{0%{transform:translateY(0) rotate(.5deg)}50%{transform:translateY(-10px) rotate(-.5deg)}100%{transform:translateY(0) rotate(.5deg)}}
-    @keyframes floatC{0%{transform:translateY(0) rotate(-.8deg)}50%{transform:translateY(-20px) rotate(.8deg)}100%{transform:translateY(0) rotate(-.8deg)}}
-
-    .p1{animation:floatA 5.2s ease-in-out infinite}
-    .p2{animation:floatB 3.8s ease-in-out infinite}
-    .p3{animation:floatC 6.4s ease-in-out infinite}
-    .p4{animation:floatB 4.6s ease-in-out infinite}
-
-    /* Balloons (generated by JS) */
-    .balloon {
-      position: absolute;
-      bottom: -160px;
-      width: 90px;
-      height: 120px;
-      border-radius: 60% 60% 55% 55%;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.18);
-      z-index: 40;
-      transform-origin: center bottom;
-      transition: transform 0.2s ease;
-    }
-
-    .balloon .string{position:absolute;bottom:-64px;width:2px;height:64px;border-radius:2px;opacity:0.95;background:rgba(0,0,0,0.6)}
-
-    @keyframes rise {
-      0% {
-        transform: translateY(0) scale(0.92);
-        opacity: 0
-      }
-
-      8% {
-        opacity: 1
-      }
-
-      100% {
-        transform: translateY(-220vh) scale(0.92);
-        opacity: 0
-      }
-    }
-
-    /* Confetti canvas sits above the letter area */
-    .confetti-canvas {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
+      top:0; left:0;
+      width:100%;
+      height:100%;
       pointer-events: none;
-      z-index: 45
-    }
-
-    /* Footer small notes */
-    .meta {
-      margin-top: 12px;
-      color: #536779;
-      font-size: 13px
-    }
-
-    /* responsive */
-    @media(max-width:1000px) {
-      .stage {
-        flex-direction: column;
-        align-items: center
-      }
-
-      .photo-wrap {
-        order: -1
-      }
-
-      .card {
-        max-width: 100%
-      }
-
-      .collage{width:260px;height:260px}
-      .p1{width:150px;height:150px}
-      .p2{width:100px;height:100px}
-      .p3{width:120px;height:120px}
-      .p4{width:80px;height:80px}
+      z-index: 40;
     }
   </style>
 </head>
 
 <body>
   <div class="stage">
-    <div class="card" id="card">
-      <div class="card-header">
-        <div class="title">Birthday Letter - From Family</div>
-        <div class="controls">
-          <button class="control" id="playMusicBtn">Play Music</button>
-        </div>
-      </div>
+    <!-- Envelope -->
+    <div class="envelope" id="envelope">📩 Open Me!</div>
 
+    <!-- Letter card -->
+    <div class="card" id="card">
       <div class="letter-area" id="letterArea">
         <canvas class="confetti-canvas" id="confetti"></canvas>
         <div id="balloonLayer" aria-hidden="true"></div>
-        <div id="letter" class="letter" spellcheck="true">
-          Happy Birthday Papa!
-          
+        <div id="letter" class="letter">
+          🎉 Happy Birthday Papa! 🎉<br><br>
+          Wishing you a day filled with love, joy, and all the happiness in the world. Thank you for being an amazing father and inspiration.<br><br>
+          Love, <br>
+          Your Family ❤️
         </div>
       </div>
     </div>
-
-   <div class="photo-wrap">
-    <div class="collage" id="collage">
-      <div class="photo p1">
-        <div class="placeholder"><img src="photo1.jpg" alt="Photo 1"></div>
-      </div>
-      <div class="photo p2">
-        <div class="placeholder"><img src="photo2.jpg" alt="Photo 2"></div>
-      </div>
-      <div class="photo p3">
-        <div class="placeholder"><img src="photo3.jpg" alt="Photo 3"></div>
-      </div>
-      <div class="photo p4">
-        <div class="placeholder"><img src="photo4.jpg" alt="Photo 4"></div>
-      </div>
-    </div>
   </div>
-
 
   <!-- background audio -->
   <audio id="bgm" loop preload="auto">
@@ -265,185 +117,118 @@
   </audio>
 
   <script>
-    /* Configuration */
-    const BALLOON_COLORS = [
-      'linear-gradient(180deg,#ff3b6f,#ff6b9a)',
-      'linear-gradient(180deg,#ffd166,#ffb46b)',
-      'linear-gradient(180deg,#6ee7b7,#2ec49a)',
-      'linear-gradient(180deg,#6b8cff,#4b6cff)'
-    ];
-    const POP_COLORS = ['#ff3b6f', '#ffd166', '#6ee7b7', '#6b8cff', '#c084fc', '#ff8ba7'];
-
-    const letterArea = document.getElementById('letterArea');
-    const balloonLayer = document.getElementById('balloonLayer');
-    const confettiCanvas = document.getElementById('confetti');
+    const envelope = document.getElementById('envelope');
+    const card = document.getElementById('card');
     const bgm = document.getElementById('bgm');
-    const playMusicBtn = document.getElementById('playMusicBtn');
-    const collage = document.getElementById('collage');
-    const photoInput = document.getElementById('photoInput');
 
-    // Play music only when button pressed
-    let playing=false;
-    playMusicBtn.addEventListener('click', async ()=>{
-      try{
-        if(!playing){ await bgm.play(); playing=true; playMusicBtn.textContent='Pause Music'; }
-        else{ bgm.pause(); playing=false; playMusicBtn.textContent='Play Music'; }
-      }catch(e){ console.warn('Audio error',e); }
+    envelope.addEventListener('click', () => {
+      envelope.classList.add('opened');
+      setTimeout(() => {
+        envelope.style.display = 'none';
+        card.style.display = 'block';
+        bgm.play().catch(e=>console.log('Audio blocked:',e));
+        startEffects();
+      }, 600);
     });
 
-    /* CONFETTI SYSTEM: continuous emitter */
-    (function () {
+    // Confetti + balloon system
+    function startEffects() {
+      const BALLOON_COLORS = [
+        'linear-gradient(180deg,#ff3b6f,#ff6b9a)',
+        'linear-gradient(180deg,#ffd166,#ffb46b)',
+        'linear-gradient(180deg,#6ee7b7,#2ec49a)',
+        'linear-gradient(180deg,#6b8cff,#4b6cff)'
+      ];
+      const POP_COLORS = ['#ff3b6f', '#ffd166', '#6ee7b7', '#6b8cff', '#c084fc', '#ff8ba7'];
+      const letterArea = document.getElementById('letterArea');
+      const balloonLayer = document.getElementById('balloonLayer');
+      const confettiCanvas = document.getElementById('confetti');
       const ctx = confettiCanvas.getContext('2d');
-      let w = 0, h = 0, particles = [];
-      function resize() {
+      let particles = [];
+
+      function resizeCanvas() {
         const r = window.devicePixelRatio || 1;
-        w = confettiCanvas.width = letterArea.clientWidth * r;
-        h = confettiCanvas.height = letterArea.clientHeight * r;
-        confettiCanvas.style.width = letterArea.clientWidth + 'px';
-        confettiCanvas.style.height = letterArea.clientHeight + 'px';
-        ctx.setTransform(r, 0, 0, r, 0, 0);
+        confettiCanvas.width = letterArea.clientWidth*r;
+        confettiCanvas.height = letterArea.clientHeight*r;
+        confettiCanvas.style.width = letterArea.clientWidth+'px';
+        confettiCanvas.style.height = letterArea.clientHeight+'px';
+        ctx.setTransform(r,0,0,r,0,0);
       }
-      window.addEventListener('resize', resize); resize();
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
 
-      function rand(min, max) { return Math.random() * (max - min) + min }
-      function makeParticle(x, y, dir) {
-        return {
-          x, y,
-          vx: rand(80, 320) * (dir === 'left' ? 1 : -1) / 60,
-          vy: rand(-8, -18),
-          size: Math.round(rand(6, 16)),
-          rot: rand(0, 360),
-          vrot: rand(-14, 14),
-          life: rand(100, 220),
-          color: POP_COLORS[Math.floor(rand(0, POP_COLORS.length))]
+      function rand(min,max){return Math.random()*(max-min)+min;}
+      function makeParticle(x,y,dir){return {x,y,vx:rand(80,320)*(dir==='left'?1:-1)/60,vy:rand(-8,-18),size:rand(6,16),rot:rand(0,360),vrot:rand(-14,14),life:rand(100,220),color:POP_COLORS[Math.floor(rand(0,POP_COLORS.length))]};}
+
+      function emitConfetti(amount=80){
+        const rect=letterArea.getBoundingClientRect();
+        for(let i=0;i<amount;i++){
+          const side=Math.random()>0.5?'left':'right';
+          const y=rand(20,rect.height-20);
+          const x=side==='left'?-10:rect.width+10;
+          particles.push(makeParticle(x,y,side));
         }
       }
 
-      function emitBurst(amount = 140) {
-        const rect = letterArea.getBoundingClientRect();
-        for (let i = 0; i < amount; i++) {
-          const side = Math.random() > 0.5 ? 'left' : 'right';
-          const y = rand(20, rect.height - 20);
-          const x = side === 'left' ? -10 : rect.width + 10;
-          particles.push(makeParticle(x, y, side));
+      function updateParticles(){
+        for(let i=particles.length-1;i>=0;i--){
+          const p=particles[i];
+          p.x+=p.vx; p.y+=p.vy; p.vy+=0.34; p.rot+=p.vrot; p.life--;
+          if(p.y>letterArea.clientHeight+60||p.life<=0) particles.splice(i,1);
         }
       }
 
-      function emitContinuous() {
-        emitBurst(80);
-        setTimeout(emitContinuous, 900 + Math.random() * 700);
-      }
-
-      function update() {
-        for (let i = particles.length - 1; i >= 0; i--) {
-          const p = particles[i];
-          p.x += p.vx; p.y += p.vy; p.vy += 0.34; p.rot += p.vrot; p.life--;
-          if (p.y > h / (window.devicePixelRatio || 1) + 60 || p.life <= 0) particles.splice(i, 1);
-        }
-      }
-      function draw() {
-        ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-        for (const p of particles) {
+      function drawParticles(){
+        ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+        for(const p of particles){
           ctx.save();
-          ctx.translate(p.x + 10, p.y + 10);
-          ctx.rotate(p.rot * Math.PI / 180);
-          ctx.fillStyle = p.color; ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+          ctx.translate(p.x+10,p.y+10);
+          ctx.rotate(p.rot*Math.PI/180);
+          ctx.fillStyle=p.color; ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size*0.6);
           ctx.restore();
         }
       }
-      function loop() { update(); draw(); requestAnimationFrame(loop); }
-      loop();
 
-      window._emitConfetti = emitBurst;
-      window._startConfetti = emitContinuous;
-    })();
+      function confettiLoop(){ updateParticles(); drawParticles(); requestAnimationFrame(confettiLoop);}
+      confettiLoop();
+      setInterval(()=>emitConfetti(140), 1000+Math.random()*800);
 
-    /* BALLOON SYSTEM: continuously spawn balloons with random horizontal drift */
-    function spawnBalloon() {
-      const b = document.createElement('div');
-      b.className = 'balloon';
-      const col = BALLOON_COLORS[Math.floor(Math.random() * BALLOON_COLORS.length)];
-      b.style.background = col;
-      const scale = (Math.random() * 0.45) + 0.7; // 0.7 - 1.15
-      b.style.width = Math.round(80 * scale) + 'px';
-      b.style.height = Math.round(110 * scale) + 'px';
+      // Balloons
+      function spawnBalloon(){
+        const b=document.createElement('div');
+        b.className='balloon';
+        const col = BALLOON_COLORS[Math.floor(Math.random()*BALLOON_COLORS.length)];
+        b.style.background = col;
+        const scale = 0.7+Math.random()*0.45;
+        b.style.width = Math.round(80*scale)+'px';
+        b.style.height = Math.round(110*scale)+'px';
+        const leftPct = 8 + Math.random()*84;
+        b.style.left = leftPct+'%';
+        const str=document.createElement('div'); str.className='string'; b.appendChild(str);
+        const drift=(Math.random()*80)-40;
+        const duration = Math.random()*6+7;
+        const delay=Math.random()*1.2;
+        b.style.animation = `rise ${duration}s linear ${delay}s forwards`;
+        b.dataset.start = performance.now();
+        b.dataset.duration = (duration+delay)*1000;
+        b.dataset.drift = drift;
+        balloonLayer.appendChild(b);
+        setTimeout(()=>{ if(b.parentNode)b.parentNode.removeChild(b);}, (duration+delay)*1000+300);
+      }
 
-      // initial horizontal position inside letter area
-      const leftPct = 8 + Math.random() * 84; // keep inside edges
-      b.style.left = leftPct + '%';
-
-      const str = document.createElement('div'); str.className='string'; b.appendChild(str);
-
-      const drift = (Math.random() * 80) - 40; // left/right drift in percent
-      const duration = Math.random() * 6 + 7; // 7 - 13s
-      const delay = Math.random() * 1.2; // small delay
-      b.style.animation = `rise ${duration}s linear ${delay}s forwards`;
-      b.dataset.start = performance.now();
-      b.dataset.duration = (duration + delay) * 1000;
-      b.dataset.drift = drift;
-
-      balloonLayer.appendChild(b);
-
-      // remove after finished
-      setTimeout(() => { if (b.parentNode) b.parentNode.removeChild(b); }, (duration + delay) * 1000 + 300);
-    }
-
-    function startBalloonLoop(ratePerSec = 0.7) {
-      const base = 1000 / ratePerSec;
-      return setInterval(spawnBalloon, base * (0.75 + Math.random() * 0.6));
-    }
-
-    // animate horizontal drift of balloons
-    function animateBalloons() {
-      const nodes = Array.from(document.querySelectorAll('.balloon'));
-      nodes.forEach((b) => {
-        const elapsed = (performance.now() - (b.dataset.start || performance.now())) / 1000;
-        const duration = parseFloat(b.dataset.duration || 9000) / 1000;
-        const drift = parseFloat(b.dataset.drift || 0);
-        const prog = Math.min(1, elapsed / duration);
-        const initialLeft = parseFloat(b.style.left) || 50;
-        const newLeft = initialLeft + (drift * prog);
-        b.style.left = newLeft + '%';
+      setInterval(spawnBalloon, 1200);
+      requestAnimationFrame(function animate(){
+        document.querySelectorAll('.balloon').forEach(b=>{
+          const elapsed=(performance.now()-b.dataset.start)/1000;
+          const duration=parseFloat(b.dataset.duration)/1000;
+          const drift=parseFloat(b.dataset.drift);
+          const prog=Math.min(1,elapsed/duration);
+          const initialLeft=parseFloat(b.style.left)||50;
+          b.style.left=(initialLeft+drift*prog)+'%';
+        });
+        requestAnimationFrame(animate);
       });
-      requestAnimationFrame(animateBalloons);
     }
-
-    // /* PHOTO COLLAGE: clicking a photo opens upload for that slot */
-    // collage.addEventListener('click', (e)=>{
-    //   const p = e.target.closest('.photo');
-    //   if(!p) return;
-    //   const idx = p.dataset.index || '1';
-    //   photoInput.dataset.target = idx;
-    //   photoInput.click();
-    // });
-
-    // photoInput.addEventListener('change', (e)=>{
-    //   const file = e.target.files && e.target.files[0]; if(!file) return;
-    //   const url = URL.createObjectURL(file);
-    //   const target = e.target.dataset.target || '1';
-    //   const slot = collage.querySelector('.photo[data-index="'+target+'"]');
-    //   if(!slot) return;
-    //   slot.innerHTML = '';
-    //   const img = document.createElement('img'); img.src=url; img.alt = 'Photo '+target; slot.appendChild(img);
-    // });
-
-    // Main onload init: start confetti then balloons and floating photos already animated via CSS
-    document.addEventListener('DOMContentLoaded', ()=>{
-      // start confetti continuous
-      if(window._startConfetti) window._startConfetti();
-
-      // spawn initial burst, then start looped balloons
-      for(let i=0;i<8;i++){ setTimeout(spawnBalloon, i*250 + Math.random()*600); }
-      const balloonLoop = startBalloonLoop(0.9);
-      requestAnimationFrame(animateBalloons);
-
-      // occasional big confetti celebrations
-      setInterval(()=>{ if(window._emitConfetti) window._emitConfetti(180); }, 8000 + Math.random()*4000);
-
-      // cleanup
-      window.addEventListener('beforeunload', ()=>{ clearInterval(balloonLoop); });
-    });
   </script>
 </body>
-
 </html>
